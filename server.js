@@ -1,19 +1,24 @@
 import http from "http";
 
-const server = http.createServer((req,res)=>{
-    if (req.url==="/sse"){
-        res.writeHead(200, {
-            "content-type": "text/event-stream",
-            "cache-control": "no-cache",
-            "connection": "keep-alive"
-        });
-        res.write(`data: {"type":"initialize","status":"ok"}\n\n`);
-    } else {
-        res.writeHead(200, {"content-type":"application/json"});
-        res.end(JSON.stringify({status:"MCP Server running"}));
-    }
+const server = http.createServer((req, res) => {
+  if (req.url === "/sse") {
+    res.writeHead(200, {
+      "Content-Type": "text/event-stream",
+      "Cache-Control": "no-cache",
+      "Connection": "keep-alive"
+    });
+
+    // Fake MCP handshake response
+    res.write(`data: {"type":"initialize","status":"ok"}\n\n`);
+  } else {
+    res.writeHead(200, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({ status: "MCP server running" }));
+  }
 });
 
-server.listen(3000, ()=>{
-    console.log("Server listening on port 3000");
+// ✅ Use Render's PORT env var if present
+const PORT = process.env.PORT || 3000;
+
+server.listen(PORT, () => {
+  console.log(`MCP server running on port ${PORT}`);
 });
